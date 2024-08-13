@@ -2,23 +2,17 @@
 #include <iostream>
 #include <string>
 
-int main()
+int main(int ac, char** av)
 {
-    std::string intTest = "-458";
-
-    std::string doubleTest = "3.2";
-    std::string negDoubleTest = "-3.2";
-
-    std::string floatTest = "4.34f";
-    std::string negFloatTest = "-4.34f";
-
-    ScalarConverter::convert(intTest);
-
-    // ScalarConverter::convert(doubleTest);
-    // ScalarConverter::convert(negDoubleTest);
-
-    // ScalarConverter::convert(floatTest);
-    // ScalarConverter::convert(negFloatTest);
-
+    if (ac != 2)
+    {
+        std::cerr << "Argument error" << std::endl;
+        return (1);
+    }
+    else
+    {
+        std::string intTest = av[1];
+        ScalarConverter::convert(intTest);
+    }
     return (0);
 }

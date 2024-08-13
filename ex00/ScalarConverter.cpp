@@ -9,11 +9,11 @@
 
     ScalarConverter& ScalarConverter::operator=(const ScalarConverter &other)
     {
-        (void) other;
-        // if (this != &other)
-        // {
-
-        // }
+        if (this != &other)
+        {
+            this->_isInputValid = other._isInputValid;
+            this->_isPseudoLiteral = other._isPseudoLiteral;
+        }
         return *this;
     }
 
@@ -78,10 +78,10 @@
             else
             {
                 std::cout << "char: No displayable" << std::endl;
-                std::cout << "int: " << intResult << std::endl;
-                std::cout << "float: " << floatResult << ".0f" << std::endl;
-                std::cout << "double: " << doubleResult << ".0" << std::endl;
             }
+            std::cout << "int: " << intResult << std::endl;
+            std::cout << "float: " << floatResult << ".0f" << std::endl;
+            std::cout << "double: " << doubleResult << ".0" << std::endl;
         }
         else
             std::cerr << "Input not valid: " << str << std::endl;
