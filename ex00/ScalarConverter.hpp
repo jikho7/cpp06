@@ -6,22 +6,24 @@
 #include <stdlib.h>
 #include <iostream>
 #include <ostream>
+#include <limits>
 
 #define INT 0
 #define FLOAT 1
 #define DOUBLE 2
-#define PSEUDOLITERALNAN 3
-#define PSEUDOLITERALINF 4
-#define CHAR 5
+#define CHAR 3
+#define PSEUDOLITERALNAN 4
+#define PSEUDOLITERALINF 5
 
 
 class ScalarConverter
 {
         int     _type;
-        int     _intResult;
+        long     _intResult;
         float   _floatResult;
         double  _doubleResult;
         char    _charResult;
+        bool    _outOfRange;
 
         ScalarConverter();
         ~ScalarConverter();
@@ -40,6 +42,10 @@ class ScalarConverter
         void        convertFromStringToType(std::string literalString);
         void        explicitConversion();
         int         getType()const;
+        void        printChar();
+        void        printInt();
+        void        printFloat();
+        void        printDouble();
 };
 
 

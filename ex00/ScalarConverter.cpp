@@ -1,8 +1,15 @@
 #include "ScalarConverter.hpp"
    
-    ScalarConverter::ScalarConverter() : _type(0){}
-    ScalarConverter::~ScalarConverter(){}
+    ScalarConverter::ScalarConverter(){
+        this->_type = 0;
+        this->_intResult = 0;
+        this->_floatResult = 0;
+        this->_doubleResult = 0;
+        this->_charResult = 0;
+        this->_outOfRange = false;
+    }
 
+    ScalarConverter::~ScalarConverter(){}
     ScalarConverter::ScalarConverter(const ScalarConverter &other){
         *this = other;}
 
@@ -46,7 +53,9 @@
                     this->_type = FLOAT;
                 }
                 else if (isalpha(*it))
+                {
                     this->_type = CHAR;
+                }
             }
         }
         std::cout << "type : " << this->_type << std::endl;
@@ -56,22 +65,28 @@ bool ScalarConverter::isInputValid(std::string literalString)
 {
     int isDouble = 0;
     int isFloat = 0;
+    int isAlpha = 0;
     bool hasDecimal = false;
     bool hasDigitAfterDecimal = false;
 
     for (std::string::iterator it = literalString.begin(); it != literalString.end(); ++it)
     {
-        if (std::isalpha(*it) && (it + 1) == literalString.end())
-            return true;
+        if (std::isalpha(*it))
+            isAlpha++;
         if (*it == '.')
         {
             isDouble++;
             hasDecimal = true;
         }
         else if (hasDecimal && isdigit(*it))
-        {
             hasDigitAfterDecimal = true;
+        if ((*it != '-') && (isDouble > 1 || isFloat > 1 || isAlpha > 1))
+        {
+            std::cerr << "Input is not valid." << std::endl;
+            return false;
         }
+        if (std::isalpha(*it) && (it + 1) == literalString.end())
+            return true;
         if (*it == 'f')
         {
             isFloat++;
@@ -81,38 +96,60 @@ bool ScalarConverter::isInputValid(std::string literalString)
                 return false;
             }
         }
-        if ((*it != '-') && (isDouble > 1 || isFloat > 1))
-        {
-            std::cerr << "Input is not valid." << std::endl;
-            return false;
-        }
     }
     return true;
 }
 
-    void ScalarConverter::printOutput(std::string literalString)
-    {
-        if (isPseudoLiteral(literalString))
-            ScalarConverter::printPseudoLiteral(literalString);
+void ScalarConverter::printChar()
+{
+    if (this->_intResult > 31 && this->_intResult < 127)
+        std::cout << "char: " << static_cast<char>(this->_intResult) << std::endl;
+    else
+        std::cout << "char: No displayable" << std::endl;
+}
+
+void ScalarConverter::printInt()
+{
+    if (_intResult >= std::numeric_limits<int>::max() || _intResult <= -std::numeric_limits<int>::max())
+        std::cout << "int: Out of range" << std::endl;
+    else
+        std::cout << "int: " << _intResult << std::endl;
+}
+
+void ScalarConverter::printFloat()
+{
+    if (this->_floatResult >= std::numeric_limits<float>::max() || this->_floatResult <= -std::numeric_limits<float>::max())
+        std::cout << "float: Out of range" << std::endl;
+    else {
+        if (this->_floatResult == static_cast<int>(this->_floatResult))
+            std::cout << "float: " << this->_floatResult << ".0f" << std::endl;
         else
-        {
-            if (isprint(this->_charResult))
-                std::cout << "char: " << this->_charResult << std::endl;
-            else
-                std::cout << "char: No displayable" << std::endl;
-            std::cout << "int: " << this->_intResult << std::endl;
-            if (this->_floatResult == static_cast<int>(this->_floatResult))
-                std::cout << "float: " << this->_floatResult << ".0f" << std::endl;
-            else
-                std::cout << "float: " << this->_floatResult << "f" << std::endl;
-
-            if (this->_doubleResult == static_cast<int>(this->_doubleResult))
-                std::cout << "double: " << this->_doubleResult << ".0" << std::endl;
-            else
-                std::cout << "double: " << this->_doubleResult << std::endl;
-        }
+            std::cout << "float: " << this->_floatResult << "f" << std::endl;
     }
+}
 
+void ScalarConverter::printDouble()
+{
+    if (_doubleResult >= std::numeric_limits<double>::max() || _doubleResult <= -std::numeric_limits<double>::max())
+        std::cout << "double: Out of range" << std::endl;
+    else {
+        if (_doubleResult == static_cast<int>(_doubleResult))
+            std::cout << "double: " << _doubleResult << ".0" << std::endl;
+        else
+            std::cout << "double: " << _doubleResult << std::endl;
+    }
+}
+
+void ScalarConverter::printOutput(std::string literalString) {
+    if (isPseudoLiteral(literalString)) {
+        printPseudoLiteral(literalString);
+    } else {
+        printChar();
+        printInt();
+        printFloat();
+        printDouble();
+    }
+}
 
     void ScalarConverter::convertFromStringToType(std::string literalString)
     {
@@ -121,13 +158,16 @@ bool ScalarConverter::isInputValid(std::string literalString)
         switch(this->_type)
         {
             case(INT):
-                this->_intResult = std::atoi(str);
+                this->_intResult = std::atol(str);
                 break;
             case(FLOAT):
                 this->_floatResult =  std::atof(str);
                 break;
             case(DOUBLE):
                 this->_doubleResult =  std::strtod(str, NULL);
+                break;
+            case(CHAR):
+                this->_intResult = str[0];
                 break;
             default:
                 break;
@@ -144,14 +184,18 @@ bool ScalarConverter::isInputValid(std::string literalString)
                 this->_doubleResult =  static_cast<double>(this->_intResult);
                 break;
             case(FLOAT):
-                this->_intResult = static_cast<int>(this->_floatResult);
+                this->_intResult = static_cast<long>(this->_floatResult);
                 this->_doubleResult = static_cast<double>(this->_floatResult);
                 this->_charResult = this->_intResult;
                 break;
             case(DOUBLE):
-                this->_intResult =  static_cast<double>(this->_doubleResult);
+                this->_intResult =  static_cast<long>(this->_doubleResult);
                 this->_floatResult = static_cast<float>(this->_doubleResult);
                 this->_charResult = this->_intResult;
+                break;
+            case(CHAR):
+                this->_floatResult = static_cast<float>(this->_intResult);
+                this->_doubleResult = static_cast<double>(this->_intResult);
             default:
                 break;
         }
@@ -190,7 +234,7 @@ bool ScalarConverter::isInputValid(std::string literalString)
         }
     }
 
-    int ScalarConverter::getType()const
-    {
-        return (this->_type);
-    }
+int ScalarConverter::getType()const
+{
+    return (this->_type);
+}
