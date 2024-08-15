@@ -18,34 +18,38 @@
 
 class ScalarConverter
 {
-        int     _type;
-        long     _intResult;
-        float   _floatResult;
-        double  _doubleResult;
-        char    _charResult;
-        bool    _outOfRange;
+    int     _type;
+    long    _intResult;
+    float   _floatResult;
+    double  _doubleResult;
+    char    _charResult;
 
-        ScalarConverter();
-        ~ScalarConverter();
+    // Constructor and destructor
+    ScalarConverter();
+    ~ScalarConverter();
 
+    // Copy constructor and assignement copy
+    ScalarConverter(const ScalarConverter &other);
+    ScalarConverter &operator=(const ScalarConverter &other);
+    
     public :
-        ScalarConverter(const ScalarConverter &other);
-        ScalarConverter &operator=(const ScalarConverter &other);
 
-        static void convert(std::string literalString);
-        bool        isInputValid(std::string literalString);
-        void        printOutput(std::string literalString);
-        void        printPseudoLiteral(std::string literalString);
+    // Methodes
+    static void convert(std::string literalString);
+    void        findType(std:: string literalString);
+    void        convertFromStringToType(std::string literalString);
+    void        explicitConversion();
+    bool        isInputValid(std::string literalString);
+    void        printOutput(std::string literalString);
+    bool        isPseudoLiteral(std::string literalString);
+    void        printPseudoLiteral(std::string literalString);
 
-        bool        isPseudoLiteral(std::string literalString);
-        void        findType(std:: string literalString);
-        void        convertFromStringToType(std::string literalString);
-        void        explicitConversion();
-        int         getType()const;
-        void        printChar();
-        void        printInt();
-        void        printFloat();
-        void        printDouble();
+    int         getType()const;
+
+    void        printChar();
+    void        printInt();
+    void        printFloat();
+    void        printDouble();
 };
 
 
