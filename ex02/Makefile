@@ -1,13 +1,13 @@
-NAME = zombie
-SRC = main.cpp newZombie.cpp randomChump.cpp Zombie.cpp
+NAME = identify
+SRC = main.cpp Base.cpp
 OBJ := $(SRC:%.cpp=%.o)
-CXXFLAGS = -Wall -Werror -Wextra -std=c++98
+CXXFLAGS = -Wall -Werror -Wextra -Wno-conversion -std=c++98 -fsanitize=address -g
 CXX = g++
 
 all : $(NAME)
 
-.c.o:
-	${CC} ${CXXLAGS} -I. -c $< -o ${<:.c=.o}
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -I. -c $< -o $@
 
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
@@ -21,5 +21,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re 
-
 
