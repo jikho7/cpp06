@@ -3,9 +3,9 @@
 #include "B.hpp"
 #include "C.hpp"
 
-#include <typeinfo>
 #include <cstdlib>
 #include <ctime>
+#include <exception>
 
 Base * generate(void)
 {
@@ -51,14 +51,14 @@ void identify(Base& p)
         (void)a;
 
     }
-    catch (std::bad_cast &bc){}
+    catch (std::exception &bc){}
     try
     {
         B &b = dynamic_cast<B&>(p);
         std::cout << "B" << std::endl;
         (void)b;
     }
-    catch (std::bad_cast &bc){}
+    catch (std::exception &bc){}
     try
     {
         C &c = dynamic_cast<C&>(p);
@@ -66,7 +66,7 @@ void identify(Base& p)
         (void)c;
 
     }
-    catch (std::bad_cast &bc){}
+    catch (std::exception &bc){}
 }
 
 int main()
