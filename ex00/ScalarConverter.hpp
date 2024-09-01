@@ -8,6 +8,7 @@
 #include <ostream>
 #include <limits>
 
+
 #define INT 0
 #define FLOAT 1
 #define DOUBLE 2
@@ -31,7 +32,7 @@ class ScalarConverter
     // Copy constructor and assignement copy
     ScalarConverter(const ScalarConverter &other);
     ScalarConverter &operator=(const ScalarConverter &other);
-    
+
     public :
 
     // Methodes

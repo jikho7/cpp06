@@ -3,7 +3,7 @@
 // ##################################################################
 //                    Constructor && Destructor                     #
 // ##################################################################
-  
+
 ScalarConverter::ScalarConverter(){
     this->_type = 0;
     this->_intResult = 0;
@@ -84,7 +84,7 @@ void ScalarConverter::findType(std::string literalString)
             }
         }
     }
-    std::cout << "type : " << this->_type << std::endl;
+    //std::cout << "type : " << this->_type << std::endl;
 }
 
 bool ScalarConverter::isInputValid(std::string literalString)
@@ -136,7 +136,7 @@ void ScalarConverter::printChar()
 
 void ScalarConverter::printInt()
 {
-    if (this->_intResult >= std::numeric_limits<int>::max() || this->_intResult <= -std::numeric_limits<int>::max())
+    if (this->_intResult > std::numeric_limits<int>::max() || this->_intResult < -std::numeric_limits<int>::max())
         std::cout << "int: Out of range" << std::endl;
     else
         std::cout << "int: " << this->_intResult << std::endl;
@@ -144,9 +144,10 @@ void ScalarConverter::printInt()
 
 void ScalarConverter::printFloat()
 {
-    if (this->_floatResult >= std::numeric_limits<float>::max() || this->_floatResult <= -std::numeric_limits<float>::max())
+    if (this->_floatResult > std::numeric_limits<float>::max() || this->_floatResult < -std::numeric_limits<float>::max())
         std::cout << "float: Out of range" << std::endl;
-    else {
+    else
+    {
         if (this->_floatResult == static_cast<int>(this->_floatResult))
             std::cout << "float: " << this->_floatResult << ".0f" << std::endl;
         else
@@ -156,7 +157,7 @@ void ScalarConverter::printFloat()
 
 void ScalarConverter::printDouble()
 {
-    if (this->_doubleResult >= std::numeric_limits<double>::max() || this->_doubleResult <= -std::numeric_limits<double>::max())
+    if (this->_doubleResult > std::numeric_limits<double>::max() || this->_doubleResult < -std::numeric_limits<double>::max())
         std::cout << "double: Out of range" << std::endl;
     else {
         if (this->_doubleResult == static_cast<int>(this->_doubleResult))
@@ -238,7 +239,7 @@ bool ScalarConverter::isPseudoLiteral(std::string literalString)
         this->_type = PSEUDOLITERALNAN;
         return true;
     }
-    else if (literalString == "-inff" || literalString == "+inff" 
+    else if (literalString == "-inff" || literalString == "+inff"
         || literalString == "-inf" || literalString == "+inf")
     {
         this->_type = PSEUDOLITERALINF;
